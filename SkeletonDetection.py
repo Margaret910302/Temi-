@@ -8,7 +8,7 @@ mp_holistic = mediapipe.solutions.holistic             #全身偵測方法
 mp_pose = mediapipe.solutions.pose                     #人體姿勢估計模型
 pose = mp_pose.Pose()
 
-#cap = cv2.VideoCapture(0)  #啟用WebCam
+#cap = cv2.VideoCapture(0)  #使用鏡頭
 cap = cv2.VideoCapture('江八點健身操1.mp4')
 
 times = 0
@@ -79,19 +79,3 @@ with mp_holistic.Holistic(     #啟用偵測全身
 file.close()
 cap.release()            #釋放WebCam
 cv2.destroyAllWindows()  #關閉視窗
-
-
-
-'''
-0:00 暖身
-0:38 向下甩手  40下        38s
-1:32 緩轉脖子  3回         92s
-2:54 轉體運動  左右各3     174s
-3:19 輕提腳跟  40下        199s
-4:11 蹲下起立  40下        251s
-5:25 吸氣吐氣  3次         325s
-5:54 搖頭擺尾  40下        354s
-7:38 雙手托天  40下        458s
-10:00 雙手抓拳 40下        600s
-10:54 吸氣吐氣 3次         654s
-'''
