@@ -1,7 +1,7 @@
 import cv2
 import math
 
-cap = cv2.VideoCapture('video//江八點健身操10-雙手托天.mp4')
+cap = cv2.VideoCapture('video//yourVideo.mp4')
 frameRate = cap.get(5) #frame rate, every 5 frame 
 print(frameRate)
 while(cap.isOpened()):
