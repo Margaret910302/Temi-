@@ -1,12 +1,15 @@
 import cv2
 import mediapipe as mp
+mp_drawing = mp.solutions.drawing_utils          # mediapipe 繪圖方法
+mp_drawing_styles = mp.solutions.drawing_styles  # mediapipe 繪圖樣式
+mp_pose = mp.solutions.pose                      # mediapipe 姿勢偵測
 
 cap = cv2.VideoCapture(0)
-mp_face_detection = mp.solutions.face_detection
-mp_drawing = mp.solutions.drawing_utils
 
-with mp_face_detection.FaceDetection(
-    model_selection=0, min_detection_confidence=0.5) as face_detection:
+# 啟用姿勢偵測
+with mp_pose.Pose(
+    min_detection_confidence=0.8,
+    min_tracking_confidence=0.8) as pose:
 
     if not cap.isOpened():
         print("Cannot open camera")
@@ -16,20 +19,18 @@ with mp_face_detection.FaceDetection(
         if not ret:
             print("Cannot receive frame")
             break
-
-        img.flags.writeable = False
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        results = face_detection.process(img)
-
-        img.flags.writeable = True
-        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-        if results.detections:
-            print(len(results.detections))
-            for detection in results.detections:
-                mp_drawing.draw_detection(img, detection)
+        img = cv2.resize(img,(520,300))               # 縮小尺寸，加快演算速度
+        img2 = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)   # 將 BGR 轉換成 RGB
+        results = pose.process(img2)                  # 取得姿勢偵測結果
+        # 根據姿勢偵測結果，標記身體節點和骨架
+        mp_drawing.draw_landmarks(
+            img,
+            results.pose_landmarks,
+            mp_pose.POSE_CONNECTIONS,
+            landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
 
         cv2.imshow('oxxostudio', img)
-        if cv2.waitKey(1) == ord('q'):
-            break    # 按下 q 鍵停止
+        if cv2.waitKey(5) == ord('q'):
+            break     # 按下 q 鍵停止
 cap.release()
 cv2.destroyAllWindows()
